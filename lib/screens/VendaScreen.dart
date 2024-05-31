@@ -43,7 +43,7 @@ class _VendaScreenState extends State<VendaScreen> {
       Produto produto = produtos.firstWhere((p) => p.id == _produtoId);
       if (_quantidade! <= produto.quantidade) {
         setState(() {
-          _total = _quantidade! * 10; // Supondo um valor fixo de 10 por produto
+          _total = (_quantidade! * produto.preco)+(_quantidade! * produto.preco)*0.17; // Supondo um valor fixo de 10 por produto
         });
         await dbHelper.createVenda(_clienteId!, _produtoId!, _quantidade!, _total);
         produto.quantidade -= _quantidade!;

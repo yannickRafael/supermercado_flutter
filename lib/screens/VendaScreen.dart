@@ -45,7 +45,7 @@ class _VendaScreenState extends State<VendaScreen> {
         setState(() {
           _total = _quantidade! * 10; // Supondo um valor fixo de 10 por produto
         });
-        await dbHelper.insertVenda(Venda(id: 0, clienteId: _clienteId!, produtoId: _produtoId!, quantidade: _quantidade!, total: _total));
+        await dbHelper.createVenda(_clienteId!, _produtoId!, _quantidade!, _total);
         produto.quantidade -= _quantidade!;
         await dbHelper.updateProduto(produto);
         _fetchData();

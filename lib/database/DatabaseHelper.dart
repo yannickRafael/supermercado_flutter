@@ -56,7 +56,8 @@ class DatabaseHelper {
     ''');
   }
 
-  Future createProduto(Database db, String nome,  int quantidade) async {
+  Future createProduto(String nome,  int quantidade) async {
+    Database db = await database;
     await db.execute('''
       INSERT INTO produtos (nome, quantidade)
       VALUES($nome, $quantidade);

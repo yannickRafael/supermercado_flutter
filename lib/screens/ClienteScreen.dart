@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import '../database/DatabaseHelper.dart';
 import '../models/Cliente.dart';
+import '../screens/VendaHistoricoScreen.dart';
 
 class ClienteScreen extends StatefulWidget {
   @override
@@ -48,6 +49,13 @@ class _ClienteScreenState extends State<ClienteScreen> {
       _nome = cliente.nome;
       _email = cliente.email;
     });
+  }
+
+  _navigateToHistory(Cliente cliente) {
+    Navigator.push(
+      context,
+      MaterialPageRoute(builder: (context) => VendaHistoricoScreen(cliente: cliente)),
+    );
   }
 
   @override
@@ -109,6 +117,10 @@ class _ClienteScreenState extends State<ClienteScreen> {
                   trailing: Row(
                     mainAxisSize: MainAxisSize.min,
                     children: [
+                      IconButton(
+                        onPressed: ()=> _navigateToHistory(clientes[index]),
+                        icon: Icon(Icons.history)
+                      ),
                       IconButton(
                         icon: Icon(Icons.edit),
                         onPressed: () => _editCliente(clientes[index]),

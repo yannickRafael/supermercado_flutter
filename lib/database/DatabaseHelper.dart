@@ -29,7 +29,7 @@ class DatabaseHelper {
   Future _onCreate(Database db, int version) async {
     await db.execute('''
       CREATE TABLE clientes (
-        id INTEGER PRIMARY KEY,
+        id INTEGER PRIMARY KEY AUTOINCREMENT,
         nome TEXT,
         email TEXT
       )
@@ -37,7 +37,7 @@ class DatabaseHelper {
 
     await db.execute('''
       CREATE TABLE produtos (
-        id INTEGER PRIMARY KEY,
+        id INTEGER PRIMARY KEY AUTOINCREMENT,
         nome TEXT,
         quantidade INTEGER
       )
@@ -45,7 +45,7 @@ class DatabaseHelper {
 
     await db.execute('''
       CREATE TABLE vendas (
-        id INTEGER PRIMARY KEY,
+        id INTEGER PRIMARY KEY AUTOINCREMENT,
         clienteId INTEGER,
         produtoId INTEGER,
         quantidade INTEGER,
@@ -55,6 +55,15 @@ class DatabaseHelper {
       )
     ''');
   }
+
+  Future createProduto(Database db, String nome,  int quantidade) async {
+    await db.execute('''
+      INSERT INTO produtos (nome, quantidade)
+      VALUES($nome, $quantidade);
+    ''');
+  }
+
+  
 
   Future<int> insertCliente(Cliente cliente) async {
     Database db = await database;

@@ -158,16 +158,20 @@ class DatabaseHelper {
     });
   }
 
-  Future<List<Venda>> getProdutosMaisVendidos() async {
-    final db = await database;
-    final List<Map<String, dynamic>> maps = await db.query(
-      'select count(vendas.quantidade)',
-      groupBy: 'clienteId'
-    
-    );
+  Future<List<Produto>> getProdutosMaisVendidos() async {
+  final db = await database;
+  final List<Map<String, dynamic>> maps = await db.rawQuery('''
+    SELECT p.*, SUM(v.quantidade) as quantidade_vendida  FROM produtos p
+    JOIN vendas v
+    ON p.id = v.produtoId
+    GROUP BY p.id
+    ORDER BY SUM(v.quantidade) DESC
+  ''');
 
-    return List.generate(maps.length, (i) {
-      return Venda.fromMap(maps[i]);
-    });
-  }
+  return List.generate(maps.length, (i) {
+    print(maps[i]);
+    return Produto.fromMapQtdVendida(maps[i]);
+  });
+}
+
 }

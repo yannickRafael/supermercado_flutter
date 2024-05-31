@@ -26,26 +26,36 @@ class _RelatorioScreenState extends State<RelatorioScreen> {
 
   _fetchData() async {
     List<Produto> listProdutos = await dbHelper.getProdutos();
-    List<Venda> listVendas = await dbHelper.getVendas();
-    setState(() {
+    //List<Venda> listVendas = await dbHelper.getVendas();
+    setState(() async {
       produtosAbaixoDoEstoque = listProdutos.where((p) => p.quantidade < 5).toList();
-      produtosMaisVendidos = _getProdutosMaisVendidos(listProdutos, listVendas);
+      produtosMaisVendidos = await dbHelper.getProdutosMaisVendidos();
     });
   }
 
   List<Produto> _getProdutosMaisVendidos(List<Produto> produtos, List<Venda> vendas) {
-    Map<int, int> vendaCount = {};
-    for (var venda in vendas) {
-      if (vendaCount.containsKey(venda.produtoId)) {
-        vendaCount[venda.produtoId] = vendaCount[venda.produtoId]! + venda.quantidade;
-      } else {
-        vendaCount[venda.produtoId] = venda.quantidade;
-      }
+  Map<int, int> vendaCount = {};
+
+  // Calcula a quantidade total vendida para cada ID de produto
+  for (var venda in vendas) {
+    if (vendaCount.containsKey(venda.produtoId)) {
+      vendaCount[venda.produtoId] = vendaCount[venda.produtoId]! + venda.quantidade;
+    } else {
+      vendaCount[venda.produtoId] = venda.quantidade;
     }
-    List<Produto> sortedProdutos = List.from(produtos);
-    sortedProdutos.sort((a, b) => (vendaCount[b.id] ?? 0).compareTo(vendaCount[a.id] ?? 0));
-    return sortedProdutos.take(5).toList(); // Pegando os 5 produtos mais vendidos
   }
+
+  // Copia a lista de produtos para não alterar a original
+  List<Produto> sortedProdutos = List.from(produtos);
+
+  // Ordena os produtos com base na quantidade total vendida em ordem crescente
+  sortedProdutos.sort((a, b) => (vendaCount[a.id] ?? 0).compareTo(vendaCount[b.id] ?? 0));
+
+  // Retorna os 5 produtos mais vendidos
+  return sortedProdutos.take(5).toList();
+}
+
+
 
   @override
   Widget build(BuildContext context) {
@@ -101,7 +111,7 @@ class _RelatorioScreenState extends State<RelatorioScreen> {
       itemBuilder: (context, index) {
         return ListTile(
           title: Text(produtosAbaixoDoEstoque[index].nome),
-          subtitle: Text('Quantidade: ${produtosAbaixoDoEstoque[index].quantidade}'),
+          subtitle: Text('Quantidade actual: ${produtosAbaixoDoEstoque[index].quantidade}'),
         );
       },
     );
@@ -113,7 +123,7 @@ class _RelatorioScreenState extends State<RelatorioScreen> {
       itemBuilder: (context, index) {
         return ListTile(
           title: Text(produtosMaisVendidos[index].nome),
-          subtitle: Text('Quantidade vendida: ${produtosMaisVendidos[index].quantidade}'),
+          subtitle: Text('Quantidade vendida: ${produtosMaisVendidos[index].quantidade_vendida}'),
         );
       },
     );

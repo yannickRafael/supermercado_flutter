@@ -12,11 +12,16 @@ class _RelatorioScreenState extends State<RelatorioScreen> {
   final dbHelper = DatabaseHelper();
   List<Produto> produtosAbaixoDoEstoque = [];
   List<Produto> produtosMaisVendidos = [];
+  String selectedReport = 'Abaixo do Estoque';
+  final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
 
   @override
   void initState() {
     super.initState();
     _fetchData();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      _scaffoldKey.currentState?.openDrawer();
+    });
   }
 
   _fetchData() async {
@@ -37,7 +42,7 @@ class _RelatorioScreenState extends State<RelatorioScreen> {
         vendaCount[venda.produtoId] = venda.quantidade;
       }
     }
-    List<Produto> sortedProdutos = produtos;
+    List<Produto> sortedProdutos = List.from(produtos);
     sortedProdutos.sort((a, b) => (vendaCount[b.id] ?? 0).compareTo(vendaCount[a.id] ?? 0));
     return sortedProdutos.take(5).toList(); // Pegando os 5 produtos mais vendidos
   }
@@ -45,35 +50,72 @@ class _RelatorioScreenState extends State<RelatorioScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      key: _scaffoldKey,
       appBar: AppBar(
         title: Text('Relatórios'),
       ),
-      body: Column(
-        children: [
-          Expanded(
-            child: ListView.builder(
-              itemCount: produtosAbaixoDoEstoque.length,
-              itemBuilder: (context, index) {
-                return ListTile(
-                  title: Text(produtosAbaixoDoEstoque[index].nome),
-                  subtitle: Text('Quantidade: ${produtosAbaixoDoEstoque[index].quantidade}'),
-                );
+      drawer: Drawer(
+        child: ListView(
+          padding: EdgeInsets.zero,
+          children: [
+            DrawerHeader(
+              decoration: BoxDecoration(
+                color: Colors.blue,
+              ),
+              child: Text(
+                'Relatórios',
+                style: TextStyle(
+                  color: Colors.white,
+                  fontSize: 24,
+                ),
+              ),
+            ),
+            ListTile(
+              title: Text('Produtos Abaixo do Estoque'),
+              onTap: () {
+                setState(() {
+                  selectedReport = 'Abaixo do Estoque';
+                  Navigator.pop(context); // close the drawer
+                });
               },
             ),
-          ),
-          Expanded(
-            child: ListView.builder(
-              itemCount: produtosMaisVendidos.length,
-              itemBuilder: (context, index) {
-                return ListTile(
-                  title: Text(produtosMaisVendidos[index].nome),
-                  subtitle: Text('Quantidade vendida: ${produtosMaisVendidos[index].quantidade}'),
-                );
+            ListTile(
+              title: Text('Produtos Mais Vendidos'),
+              onTap: () {
+                setState(() {
+                  selectedReport = 'Mais Vendidos';
+                  Navigator.pop(context); // close the drawer
+                });
               },
             ),
-          ),
-        ],
+          ],
+        ),
       ),
+      body: selectedReport == 'Abaixo do Estoque' ? _buildProdutosAbaixoDoEstoque() : _buildProdutosMaisVendidos(),
+    );
+  }
+
+  Widget _buildProdutosAbaixoDoEstoque() {
+    return ListView.builder(
+      itemCount: produtosAbaixoDoEstoque.length,
+      itemBuilder: (context, index) {
+        return ListTile(
+          title: Text(produtosAbaixoDoEstoque[index].nome),
+          subtitle: Text('Quantidade: ${produtosAbaixoDoEstoque[index].quantidade}'),
+        );
+      },
+    );
+  }
+
+  Widget _buildProdutosMaisVendidos() {
+    return ListView.builder(
+      itemCount: produtosMaisVendidos.length,
+      itemBuilder: (context, index) {
+        return ListTile(
+          title: Text(produtosMaisVendidos[index].nome),
+          subtitle: Text('Quantidade vendida: ${produtosMaisVendidos[index].quantidade}'),
+        );
+      },
     );
   }
 }

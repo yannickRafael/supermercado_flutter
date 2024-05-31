@@ -105,7 +105,7 @@ class _ProdutoScreenState extends State<ProdutoScreen> {
               itemCount: produtos.length,
               itemBuilder: (context, index) {
                 return ListTile(
-                  title: Text(produtos[index].nome),
+                  title: Text('${produtos[index].nome} | ${produtos[index].id} '),
                   subtitle: Text('Quantidade: ${produtos[index].quantidade}'),
                   trailing: Row(
                     mainAxisSize: MainAxisSize.min,

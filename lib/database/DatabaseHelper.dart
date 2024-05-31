@@ -66,7 +66,7 @@ class DatabaseHelper {
   Future<void> createCliente(String nome, String email) async {
     Database db = await database;
     await db.execute('''
-      INSERT INTO produtos(nome, quantidade) VALUES(?, ?)
+      INSERT INTO clientes(nome, email) VALUES(?, ?)
     ''', [nome, email]);
   }
 

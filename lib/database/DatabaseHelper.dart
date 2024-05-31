@@ -56,13 +56,13 @@ class DatabaseHelper {
     ''');
   }
 
-  Future createProduto(String nome,  int quantidade) async {
+  Future<void> createProduto(String nome, int quantidade) async {
     Database db = await database;
     await db.execute('''
-      INSERT INTO produtos (nome, quantidade)
-      VALUES($nome, $quantidade);
-    ''');
+      INSERT INTO produtos(nome, quantidade) VALUES(?, ?)
+    ''', [nome, quantidade]);
   }
+
 
   
 

@@ -3,10 +3,11 @@ class Cliente {
   String nome;
   String email;
 
-  Cliente({this.id = 0, required this.nome, required this.email});
+  Cliente({required this.id, required this.nome, required this.email});
 
   Map<String, dynamic> toMap() {
     return {
+      'id': id,
       'nome': nome,
       'email': email,
     };

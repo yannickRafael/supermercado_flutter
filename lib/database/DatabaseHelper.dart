@@ -3,7 +3,6 @@ import 'package:path/path.dart';
 import '../models/Cliente.dart';
 import '../models/Produto.dart';
 import '../models/Venda.dart';
-import '../models/Vehicle.dart';
 
 class DatabaseHelper {
   static final DatabaseHelper _instance = DatabaseHelper._internal();
@@ -30,7 +29,7 @@ class DatabaseHelper {
   Future _onCreate(Database db, int version) async {
     await db.execute('''
       CREATE TABLE clientes (
-        id AUTO_INCREMENT INTEGER PRIMARY KEY,
+        id INTEGER PRIMARY KEY,
         nome TEXT,
         email TEXT
       )
@@ -38,16 +37,15 @@ class DatabaseHelper {
 
     await db.execute('''
       CREATE TABLE produtos (
-        id AUTO_INCREMENT INTEGER PRIMARY KEY,
+        id INTEGER PRIMARY KEY,
         nome TEXT,
-        preco DECIMAL,
         quantidade INTEGER
       )
     ''');
 
     await db.execute('''
       CREATE TABLE vendas (
-        id AUTO_INCREMENT INTEGER PRIMARY KEY,
+        id INTEGER PRIMARY KEY,
         clienteId INTEGER,
         produtoId INTEGER,
         quantidade INTEGER,
@@ -116,53 +114,4 @@ class DatabaseHelper {
       return Venda.fromMap(maps[i]);
     });
   }
-
-  Future<void> deleteVenda(int id) async {
-    final db = await database;
-    await db.delete(
-      'vendas',
-      where: 'id = ?',
-      whereArgs: [id],
-    );
-  }
-
-  Future<void> insertVehicle(Vehicle vehicle) async {
-    final db = await database;
-    await db.insert('vehicles', vehicle.toMap(), conflictAlgorithm: ConflictAlgorithm.replace);
-  }
-
-  Future<List<Vehicle>> getVehicles() async {
-    final db = await database;
-    final List<Map<String, dynamic>> maps = await db.query('vehicles');
-    return List.generate(maps.length, (i) {
-      return Vehicle(
-        id: maps[i]['id'],
-        licensePlate: maps[i]['licensePlate'],
-        owner: maps[i]['owner'],
-        entryTime: maps[i]['entryTime'] != null ? DateTime.parse(maps[i]['entryTime']) : null,
-        exitTime: maps[i]['exitTime'] != null ? DateTime.parse(maps[i]['exitTime']) : null,
-      );
-    });
-  }
-
-  Future<void> updateVehicle(Vehicle vehicle) async {
-    final db = await database;
-    await db.update(
-      'vehicles',
-      vehicle.toMap(),
-      where: 'id = ?',
-      whereArgs: [vehicle.id],
-    );
-  }
-
-  Future<void> deleteVehicle(int id) async {
-    final db = await database;
-    await db.delete(
-      'vehicles',
-      where: 'id = ?',
-      whereArgs: [id],
-    );
-  }
-
-  
 }

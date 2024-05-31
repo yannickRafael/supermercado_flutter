@@ -5,10 +5,11 @@ class Venda {
   int quantidade;
   double total;
 
-  Venda({this.id=0, required this.clienteId, required this.produtoId, required this.quantidade, required this.total});
+  Venda({required this.id, required this.clienteId, required this.produtoId, required this.quantidade, required this.total});
 
   Map<String, dynamic> toMap() {
     return {
+      'id': id,
       'clienteId': clienteId,
       'produtoId': produtoId,
       'quantidade': quantidade,

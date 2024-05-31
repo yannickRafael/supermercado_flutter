@@ -32,7 +32,7 @@ class _ClienteScreenState extends State<ClienteScreen> {
     if (_formKey.currentState!.validate()) {
       _formKey.currentState!.save();
       if (_editingClienteId == null) {
-        await dbHelper.insertCliente(Cliente(id: 0, nome: _nome!, email: _email!));
+        await dbHelper.createCliente(_nome!, _email!);
       } else {
         await dbHelper.updateCliente(Cliente(id: _editingClienteId!, nome: _nome!, email: _email!));
         _editingClienteId = null;

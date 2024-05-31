@@ -32,7 +32,8 @@ class _ProdutoScreenState extends State<ProdutoScreen> {
     if (_formKey.currentState!.validate()) {
       _formKey.currentState!.save();
       if (_editingProdutoId == null) {
-        await dbHelper.insertProduto(Produto(id: 0, nome: _nome!, quantidade: _quantidade!));
+        await dbHelper.createProduto(_nome!, _quantidade!);
+        //await dbHelper.insertProduto(Produto(id: 0, nome: _nome!, quantidade: _quantidade!));
       } else {
         await dbHelper.updateProduto(Produto(id: _editingProdutoId!, nome: _nome!, quantidade: _quantidade!));
         _editingProdutoId = null;

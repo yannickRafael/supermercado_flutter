@@ -39,6 +39,7 @@ class DatabaseHelper {
       CREATE TABLE produtos (
         id INTEGER PRIMARY KEY AUTOINCREMENT,
         nome TEXT,
+        preco DECIMAL,
         quantidade INTEGER
       )
     ''');
@@ -56,11 +57,11 @@ class DatabaseHelper {
     ''');
   }
 
-  Future<void> createProduto(String nome, int quantidade) async {
+  Future<void> createProduto(String nome, int quantidade, double preco) async {
     Database db = await database;
     await db.execute('''
-      INSERT INTO produtos(nome, quantidade) VALUES(?, ?)
-    ''', [nome, quantidade]);
+      INSERT INTO produtos(nome, quantidade, preco) VALUES(?, ?, ?)
+    ''', [nome, quantidade, preco]);
   }
 
   Future<void> createCliente(String nome, String email) async {

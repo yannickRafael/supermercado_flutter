@@ -70,6 +70,13 @@ class DatabaseHelper {
     ''', [nome, email]);
   }
 
+  Future<void> createVenda(int clienteId, int produtoId, int quantidade, double total) async {
+    Database db = await database;
+    await db.execute('''
+      INSERT INTO vendas(clienteId, produtoId, quantidade, total) VALUES(?, ?, ?, ?)
+    ''', [clienteId, produtoId, quantidade, total]);
+  }
+
 
   
 

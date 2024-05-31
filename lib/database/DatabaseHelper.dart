@@ -144,4 +144,17 @@ class DatabaseHelper {
     Database db = await database;
     return await db.delete('vendas', where: 'id = ?', whereArgs: [id]);
   }
+
+  Future<List<Venda>> getVendasByCliente(int clienteId) async {
+    final db = await database;
+    final List<Map<String, dynamic>> maps = await db.query(
+      'vendas',
+      where: 'clienteId = ?',
+      whereArgs: [clienteId],
+    );
+
+    return List.generate(maps.length, (i) {
+      return Venda.fromMap(maps[i]);
+    });
+  }
 }

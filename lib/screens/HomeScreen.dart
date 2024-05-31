@@ -3,7 +3,6 @@ import '../screens/ClienteScreen.dart'; // Import your other screens here
 import '../screens/ProdutoScreen.dart';
 import '../screens/VendaScreen.dart';
 import '../screens/RelatorioScreen.dart';
-import '../widgets/CustomDrawer.dart';
 
 class HomeScreen extends StatelessWidget {
   @override
@@ -12,7 +11,6 @@ class HomeScreen extends StatelessWidget {
       appBar: AppBar(
         title: Text('Sistema de Gestão do Parque de Estacionamento'),
       ),
-      drawer: CustomDrawer(),
       body: GridView.count(
         crossAxisCount: 2,
         children: <Widget>[

@@ -114,4 +114,9 @@ class DatabaseHelper {
       return Venda.fromMap(maps[i]);
     });
   }
+
+  Future<int> deleteVenda(int id) async {
+    Database db = await database;
+    return await db.delete('vendas', where: 'id = ?', whereArgs: [id]);
+  }
 }

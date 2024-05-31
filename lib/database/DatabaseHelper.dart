@@ -157,4 +157,17 @@ class DatabaseHelper {
       return Venda.fromMap(maps[i]);
     });
   }
+
+  Future<List<Venda>> getProdutosMaisVendidos() async {
+    final db = await database;
+    final List<Map<String, dynamic>> maps = await db.query(
+      'select count(vendas.quantidade)',
+      groupBy: 'clienteId'
+    
+    );
+
+    return List.generate(maps.length, (i) {
+      return Venda.fromMap(maps[i]);
+    });
+  }
 }

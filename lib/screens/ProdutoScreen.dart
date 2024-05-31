@@ -1,3 +1,5 @@
+import 'dart:js_interop';
+
 import 'package:flutter/material.dart';
 import '../database/DatabaseHelper.dart';
 import '../models/Produto.dart';
@@ -14,6 +16,7 @@ class _ProdutoScreenState extends State<ProdutoScreen> {
   String? _nome;
   int? _quantidade;
   int? _editingProdutoId;
+  double? _preco;
 
   @override
   void initState() {
@@ -32,10 +35,10 @@ class _ProdutoScreenState extends State<ProdutoScreen> {
     if (_formKey.currentState!.validate()) {
       _formKey.currentState!.save();
       if (_editingProdutoId == null) {
-        await dbHelper.createProduto(_nome!, _quantidade!);
+        await dbHelper.createProduto(_nome!, _quantidade!, _preco!);
         //await dbHelper.insertProduto(Produto(id: 0, nome: _nome!, quantidade: _quantidade!));
       } else {
-        await dbHelper.updateProduto(Produto(id: _editingProdutoId!, nome: _nome!, quantidade: _quantidade!));
+        await dbHelper.updateProduto(Produto(id: _editingProdutoId!, nome: _nome!, quantidade: _quantidade!, preco: _preco!));
         _editingProdutoId = null;
       }
       _fetchProdutos();
@@ -91,6 +94,19 @@ class _ProdutoScreenState extends State<ProdutoScreen> {
                       _quantidade = int.tryParse(value!);
                     },
                   ),
+                  TextFormField(
+                    initialValue: _preco?.toString(),
+                    decoration: InputDecoration(labelText: 'Preço'),
+                    validator: (value) {
+                      if (value == null || value.isEmpty) {
+                        return 'Por favor, insira o preço';
+                      }
+                      return null;
+                    },
+                    onSaved: (value) {
+                      _preco = double.tryParse(value!);
+                    },
+                  ),
                   SizedBox(height: 20),
                   ElevatedButton(
                     onPressed: _submitForm,
@@ -105,8 +121,8 @@ class _ProdutoScreenState extends State<ProdutoScreen> {
               itemCount: produtos.length,
               itemBuilder: (context, index) {
                 return ListTile(
-                  title: Text('${produtos[index].nome} | ${produtos[index].id} '),
-                  subtitle: Text('Quantidade: ${produtos[index].quantidade}'),
+                  title: Text('${produtos[index].nome}'),
+                  subtitle: Text('Quantidade: ${produtos[index].quantidade} | ${produtos[index].preco} MZN'),
                   trailing: Row(
                     mainAxisSize: MainAxisSize.min,
                     children: [

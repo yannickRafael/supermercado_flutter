@@ -19,7 +19,7 @@ class Produto {
     return Produto(
       id: map['id'],
       nome: map['nome'],
-      preco: map['preco'],
+      preco: map['preco'] is int ? map['preco'].toDouble() : map['preco'],
       quantidade: map['quantidade'],
     );
   }
